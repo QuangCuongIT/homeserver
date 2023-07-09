@@ -18,13 +18,14 @@
 <body>
     <div id="result">Loading with API key ... (If you don't have it, ask Ryan :))</div>
     <script>
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
         let apiKey = params?.api_key || null;
 
         if (apiKey) {
+
             let responseApi = '';
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
             fetch('https://api.ngrok.com/tunnels', {
                 method: 'GET',
                 headers: {
