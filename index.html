@@ -16,43 +16,48 @@
 </head>
 
 <body>
-    <div id="result"></div>
+    <div id="result">Loading with API key ... (If you don't have it, ask Ryan :))</div>
     <script>
-        let responseApi = '';
+        let apiKey = params?.api_key || null;
 
-        fetch('https://api.ngrok.com/tunnels', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer 2SHXJMNxNJODApm57AS7XsaMCNH_H4Y48NebDjPZ5ZD8eh1t',
-                'Ngrok-Version': '2'
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+        if (apiKey) {
+            let responseApi = '';
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            fetch('https://api.ngrok.com/tunnels', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + apiKey,
+                    'Ngrok-Version': '2'
                 }
-                return response.json();
             })
-            .then(data => {
-                console.log(data);
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
 
-                const result = data?.tunnels?.map(tunnel => ({
-                    name: tunnel.forwards_to.includes('8080')
-                        ? 'qbittorrent'
-                        : tunnel.forwards_to.includes('8096')
-                            ? 'Jellyfin'
-                            : tunnel.forwards_to.includes('8188')
-                                ? 'File Browser'
-                                : tunnel.forwards_to,
-                    value: tunnel.public_url
-                })) ?? [];
+                    const result = data?.tunnels?.map(tunnel => ({
+                        name: tunnel.forwards_to.includes('8080')
+                            ? 'qbittorrent'
+                            : tunnel.forwards_to.includes('8096')
+                                ? 'Jellyfin'
+                                : tunnel.forwards_to.includes('8188')
+                                    ? 'File Browser'
+                                    : tunnel.forwards_to,
+                        value: tunnel.public_url
+                    })) ?? [];
 
-                const resultDiv = document.getElementById('result');
-                resultDiv.innerHTML = result.map(obj => `<div class="result-item">${obj.name}: <a href="${obj.value}" target="_blank">${obj.value}</a></div>`).join('');
-            })
-            .catch(error => responseApi = 'Error');
-
-
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = ''; // clearning first
+                    resultDiv.innerHTML = result.map(obj => `<div class="result-item">${obj.name}: <a href="${obj.value}" target="_blank">${obj.value}</a></div>`).join('');
+                })
+                .catch(error => responseApi = 'Error');
+        }
     </script>
 </body>
 
