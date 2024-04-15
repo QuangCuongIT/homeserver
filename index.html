@@ -18,6 +18,8 @@
 <body>
     <div id="result">Loading with API key ... (If you don't have it, ask Ryan :))</div>
     <script>
+        alert("test");
+        
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
