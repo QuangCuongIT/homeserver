@@ -47,6 +47,9 @@
 		#submit:hover{
 			background-color: #333333;
 		}
+		#message{
+			color: white;
+		}
 	</style>
 </head>
 <body>
@@ -61,6 +64,10 @@
 
 			<textarea name="Ghi chú của nhân viên (nếu có)" rows="7" placeholder="Ghi chú của nhân viên (nếu có)"></textarea>
 			<input id="submitLocation" type="Nơi chấm công" name="Nơi chấm công" placeholder="Nơi chấm công" style="display: none">
+			<div id="message" style="display: none;">
+				<div>Xác nhận chấm công thành công tại:</div>
+				<a id="gmapUrl" href="" style="color: white"></a>
+			</div>
 			<input type="submit" value="Gửi" id="submit">
 		</form>
 	</div>
@@ -98,10 +105,12 @@
 				fetch(scriptURL, { method: 'POST', body: formData})
 					.then(response => {
 						if (response.status == "200") {
-							if (window.confirm("Xác nhận chấm công thành công tại: \n" + googleMapUrl + "\nBạn muốn truy cập thông tin vị trí chấm công?")){
-								window.open(googleMapUrl, '_blank');
-							};
-							window.location.reload();
+							alert("Xác nhận chấm công thành công");
+							var gUrlEl = document.getElementById("gmapUrl");
+							gUrlEl.innerHTML = googleMapUrl;
+							gUrlEl.href = googleMapUrl;
+							document.getElementById("message").style.display = "block";
+							document.getElementById("submit").style.display = "none";
 						} else {
 							alert("Chấm công thất bại")
 						}
