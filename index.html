@@ -34,15 +34,18 @@
 			padding: 20px;
 			width: 50%;
          }
-         .col-35 {
+         .col-25 {
 			float: left;
 			width: 25%;
 			margin-top: 6px;
          }
-         .col-85 {
+         .col-75 {
 			float: left;
 			width: 75%;
 			margin-top: 6px;
+         }
+		 .row {
+			margin-bottom: 0.2rem;
          }
          /* Clear floats after the columns */
          .row:after {
@@ -52,7 +55,7 @@
          }
          /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
          @media screen and (max-width: 600px) {
-         .col-35, .col-85, input[type=submit] {
+         .col-25, .col-75, input[type=submit] {
 			width: 100%;
 			margin-top: 0;
          }
@@ -129,25 +132,19 @@
       <div class="container">
          <form method="post" action="" name="contact-form">
 			<div class="row">
-               <div class="col-85">
+               <div>
                   <h1 style="color: #04a346">Tiệm Giặt Sấy Ori</h1>
                </div>
-               <div class="col-35">
+               <div class="col-25">
                </div>
             </div>
             <div class="row">
-               <div class="col-35">
-                  <label for="Tên">Tên nhân viên</label>
-               </div>
-               <div class="col-85">
-                  <input type="text" name="Tên" placeholder="Ví dụ: Oanh">
+               <div>
+                  <input type="text" name="Tên" placeholder="Tên nhân viên">
                </div>
             </div>
             <div class="row">
-               <div class="col-35">
-                  <label for="Vào/Tan Ca">Vào/Tan Ca</label>
-               </div>
-               <div class="col-85">
+               <div>
                   <select name="Vào/Tan Ca">
                      <option value="Vào Ca">Vào Ca</option>
                      <option value="Tan Ca">Tan Ca</option>
@@ -155,11 +152,8 @@
                </div>
             </div>
             <div class="row">
-               <div class="col-35">
-                  <label for="Ghi chú của nhân viên (nếu có)">Ghi chú</label>
-               </div>
-               <div class="col-85">
-                  <textarea name="Ghi chú của nhân viên (nếu có)" rows="7" placeholder="Ghi chú của nhân viên (nếu có)" style="height:200px"></textarea>
+               <div>
+                  <textarea name="Ghi chú của nhân viên (nếu có)" rows="3" placeholder="Ghi chú của nhân viên (nếu có)" style="height:80px"></textarea>
                </div>
             </div>
             <div class="row">
@@ -168,7 +162,7 @@
             <div class="row">
                <div id="message" style="display: none;">
                   <div>Xác nhận chấm công thành công tại:</div>
-                  <a id="gmapUrl" href="" style="color: white"></a>
+                  <a id="gmapUrl" href=""></a>
                </div>
                <input type="submit" value="Gửi" id="submit">
                <div id="spinning" style="display: none;" class="lds-heart">
