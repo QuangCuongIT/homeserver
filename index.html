@@ -58,6 +58,41 @@
 		#message{
 			color: white;
 		}
+
+		/* start spinning animation */
+		.lds-dual-ring {
+			/* change color here */
+			color: white
+		}
+		.lds-dual-ring,
+		.lds-dual-ring:after {
+			box-sizing: border-box;
+		}
+		.lds-dual-ring {
+			display: inline-block;
+			width: 50px;
+			height: 50px;
+		}
+		.lds-dual-ring:after {
+			content: " ";
+			display: block;
+			width: 34px;
+			height: 34px;
+			margin: 8px;
+			border-radius: 50%;
+			border: 6.4px solid currentColor;
+			border-color: currentColor transparent currentColor transparent;
+			animation: lds-dual-ring 1.2s linear infinite;
+		}
+		@keyframes lds-dual-ring {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		/* end spinning animation */
 	</style>
 </head>
 <body>
@@ -77,6 +112,7 @@
 				<a id="gmapUrl" href="" style="color: white"></a>
 			</div>
 			<input type="submit" value="Gửi" id="submit">
+			<div id="spinning" class="lds-dual-ring" style="display: none;"></div>
 		</form>
 	</div>
 
@@ -95,10 +131,15 @@
 		const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec'
 
 		const submitLocation = document.getElementById("submitLocation");
+		const submitBtn = document.getElementById("submit");
 		const form = document.forms['contact-form'];
 
 		form.addEventListener('submit', e => {
-			e.preventDefault()
+			e.preventDefault();
+
+			submitBtn.style.display = "none";
+			document.getElementById("spinning").style.display = "block";
+
 			getLocation()
 		})
 
@@ -127,8 +168,8 @@
 			var formData = new FormData(form);
 			if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
 				alert("Vui lòng điền Tên nhân viên");
-				throw new Error('Vui lòng điền Tên nhân viên');
 				window.location.reload();
+				throw new Error('Vui lòng điền Tên nhân viên');
 			} else {
 				// Verify device location
 				var hasValidLocation = false;
@@ -140,9 +181,9 @@
 					}
 				}
 				if (!hasValidLocation) {
-					alert("Chưa tới tiệm mà dám chấm công he >_< \nĐi làm mau lên, ăn roi giờ!!!");
-					throw new Error('Chưa tới tiệm mà dám chấm công he >_< !!! \nĐi làm mau lên, ăn roi giờ!');
+					alert("Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.");
 					window.location.reload();
+					throw new Error('Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.');
 				}
 
 				// Submit
@@ -154,7 +195,7 @@
 							gUrlEl.innerHTML = googleMapUrl;
 							gUrlEl.href = googleMapUrl;
 							document.getElementById("message").style.display = "block";
-							document.getElementById("submit").style.display = "none";
+							submitBtn.style.display = "none";
 						} else {
 							alert("Chấm công thất bại")
 							window.location.reload();
