@@ -69,7 +69,7 @@
 		const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec'
 
 		const submitLocation = document.getElementById("submitLocation");
-		const form = document.forms['contact-form']
+		const form = document.forms['contact-form'];
 
 		function getLocation() {
 			if (navigator.geolocation) {
@@ -90,16 +90,24 @@
 			var googleMapUrl = 'https://maps.google.com/?q='+position.coords.latitude+','+position.coords.longitude+'';
 			submitLocation.value = googleMapUrl;
 
-			fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-				.then(response => {
-					if (response.status == "200") {
-						alert("Xác nhận chấm công thành công")
-						window.location.reload();
-					} else {
-						alert("Chấm công thất bại")
-					}
-				})
-				.catch(error => console.error('Error!', error.message))
+			var formData = new FormData(form);
+			if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
+				alert("Vui lòng điền Tên");
+				window.location.reload();
+			} else {
+				fetch(scriptURL, { method: 'POST', body: formData})
+					.then(response => {
+						if (response.status == "200") {
+							if (window.confirm("Xác nhận chấm công thành công tại: \n" + googleMapUrl + "\nBạn muốn truy cập thông tin vị trí chấm công?")){
+								window.open(googleMapUrl, '_blank');
+							};
+							window.location.reload();
+						} else {
+							alert("Chấm công thất bại")
+						}
+					})
+					.catch(error => console.error('Error!', error.message))
+			}
 		}
 
 		form.addEventListener('submit', e => {
