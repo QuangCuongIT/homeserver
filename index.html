@@ -131,14 +131,18 @@
 				window.location.reload();
 			} else {
 				// Verify device location
+				var hasValidLocation = false;
 				for (let i = 0; i < shopLocations.length; i++) {
 					var shopLocation = shopLocations[i];
 					var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters
-					if (distance > MAX_DISTANCE) {
-						alert("Chưa tới tiệm mà dám chấm công he >_< \nĐi làm mau lên, ăn roi giờ!!!");
-						throw new Error('Chưa tới tiệm mà dám chấm công he >_< !!! \nĐi làm mau lên, ăn roi giờ!');
-						window.location.reload();
+					if (distance < MAX_DISTANCE) {
+						hasValidLocation = true;
 					}
+				}
+				if (!hasValidLocation) {
+					alert("Chưa tới tiệm mà dám chấm công he >_< \nĐi làm mau lên, ăn roi giờ!!!");
+					throw new Error('Chưa tới tiệm mà dám chấm công he >_< !!! \nĐi làm mau lên, ăn roi giờ!');
+					window.location.reload();
 				}
 
 				// Submit
