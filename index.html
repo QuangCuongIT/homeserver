@@ -1,67 +1,111 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="UTF-8">
-    <title>Media Server</title>
-    <style>
-        body {
-            line-height: 1.5;
-        }
-
-        .result-item {
-            margin-bottom: 10px;
-        }
-    </style>
+	<style>
+		*{
+			box-sizing: border-box;
+			padding: 0;
+			margin: 0;
+			font-family: 'poppins', sans-serif;
+			font-size: 18px;
+		}
+		body{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.container{
+			width: calc(var(--vh, 1vh) * 100);
+			padding: 30px;
+			margin: 4px;
+			border: 1px solid #eeeeee;
+			border-radius: 10px;
+			background-color: #003b5b;
+		}
+		h4{
+			margin-bottom: 10px;
+			font-size: 24px;
+			color: white;
+		}
+		input{
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 10px;
+		}
+		textarea{
+			width: 100%;
+			padding: 10px;
+		}
+		#submit{
+			border: none;
+			background-color: orangered;
+			color: white;
+			width: 200px;
+			margin-top: 10px;
+			border-radius: 5px;
+		}
+		#submit:hover{
+			background-color: #333333;
+		}
+	</style>
 </head>
-
 <body>
-    <div id="result">Loading with API key ... (If you don't have it, ask Ryan :))</div>
-    <script>
-        alert("test");
-        
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-            get: (searchParams, prop) => searchParams.get(prop),
-        });
-        let apiKey = params?.api_key || null;
+	<div class="container">
+		<form method="post" action="" name="contact-form">
+			<h4>Giặt Sấy Ori</h4>
+			<input type="text" name="Tên" placeholder="Tên">
+			<select name="Vào/Tan Ca" style="height: 50px">
+				<option value="Vào Ca">Vào Ca</option>
+				<option value="Tan Ca">Tan Ca</option>
+			</select>
 
-        if (apiKey) {
+			<textarea name="Ghi chú của nhân viên (nếu có)" rows="7" placeholder="Ghi chú của nhân viên (nếu có)"></textarea>
+			<input id="submitLocation" type="Nơi chấm công" name="Nơi chấm công" placeholder="Nơi chấm công" style="display: none">
+			<input type="submit" value="Gửi" id="submit">
+		</form>
+	</div>
 
-            let responseApi = '';
-            fetch('https://api.ngrok.com/tunnels', {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + apiKey,
-                    'Ngrok-Version': '2'
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(data);
+	<script>
+		const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec'
 
-                    const result = data?.tunnels?.map(tunnel => ({
-                        name: tunnel.forwards_to.includes('8080')
-                            ? 'qbittorrent'
-                            : tunnel.forwards_to.includes('8096')
-                                ? 'Jellyfin'
-                                : tunnel.forwards_to.includes('8188')
-                                    ? 'File Browser'
-                                    : tunnel.forwards_to,
-                        value: tunnel.public_url
-                    })) ?? [];
+		const submitLocation = document.getElementById("submitLocation");
+		const form = document.forms['contact-form']
 
-                    const resultDiv = document.getElementById('result');
-                    resultDiv.innerHTML = ''; // clearning first
-                    resultDiv.innerHTML = result.map(obj => `<div class="result-item">${obj.name}: <a href="${obj.value}" target="_blank">${obj.value}</a></div>`).join('');
-                })
-                .catch(error => responseApi = 'Error');
-        }
-    </script>
+		function getLocation() {
+			if (navigator.geolocation) {
+				try {
+					navigator.geolocation.getCurrentPosition(fillPosition);
+				}
+				catch(err) {
+					// not sure this work
+					alert("Không thể truy cập vị trí. Vui lòng cho phép truy cập.");
+				}
+			} else {
+				// not sure this work
+				alert("Thiết bị không hỗ trợ vị trí, vui lòng thử lại với trình duyệt khác (Safari, Chrome hoặc Firefox)");
+			}
+		}
+
+		function fillPosition(position) {
+			var googleMapUrl = 'https://maps.google.com/?q='+position.coords.latitude+','+position.coords.longitude+'';
+			submitLocation.value = googleMapUrl;
+
+			fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+				.then(response => {
+					if (response.status == "200") {
+						alert("Xác nhận chấm công thành công")
+						window.location.reload();
+					} else {
+						alert("Chấm công thất bại")
+					}
+				})
+				.catch(error => console.error('Error!', error.message))
+		}
+
+		form.addEventListener('submit', e => {
+			e.preventDefault()
+			getLocation()
+		})
+	</script>
 </body>
-
 </html>
