@@ -193,8 +193,10 @@
 						if (response.status == "200") {
 							alert("Xác nhận chấm công thành công");
 
-							document.getElementById("successMsg").innerHTML.text.replace("[status]", formData.get('Vào/Tan Ca'));
-							document.getElementById("successMsg").innerHTML.text.replace("[time]", getFormattedNow());
+							let msg = document.getElementById("successMsg").innerHTML;
+							msg = msg.replace("[status]", formData.get('Vào/Tan Ca'));
+							msg = msg.replace("[time]", getFormattedNow());
+							document.getElementById("successMsg").innerHTML = msg;
 
 							var gUrlEl = document.getElementById("gmapUrl");
 							gUrlEl.innerHTML = googleMapUrl;
@@ -212,6 +214,8 @@
 		}
 
 		function getFormattedNow() {
+			const date = new Date(); // Assuming the current date and time
+
 			const day = String(date.getDate()).padStart(2, '0');
 			const month = String(date.getMonth() + 1).padStart(2, '0');
 			const year = date.getFullYear();
