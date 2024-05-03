@@ -1,299 +1,244 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <style>
-         * {
-         	box-sizing: border-box;
-         }
-         input[type=text], select, textarea {
-			width: 100%;
-			padding: 12px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			resize: vertical;
-         }
-         label {
-			padding: 12px 12px 12px 0;
-			display: inline-block;
-         }
-         input[type=submit] {
-			background-color: #04a346;
-			color: white;
-			padding: 12px 20px;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-			float: left;
-         }
-         input[type=submit]:hover {
-         	-color: #04a346;
-         }
-         .container {
-			border-radius: 5px;
-			background-color: #f2f2f2;
-			padding: 20px;
-			width: 50%;
-         }
-         .col-25 {
-			float: left;
-			width: 25%;
-			margin-top: 6px;
-         }
-         .col-75 {
-			float: left;
-			width: 75%;
-			margin-top: 6px;
-         }
-		 .row {
-			margin-bottom: 0.2rem;
-         }
-         /* Clear floats after the columns */
-         .row:after {
-			content: "";
-			display: table;
-			clear: both;
-         }
-         /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-         @media screen and (max-width: 600px) {
-         .col-25, .col-75, input[type=submit] {
-			width: 100%;
-			margin-top: 0;
-         }
-         }
-         /* start spinning animation */
-         .lds-heart {
-         /* change color here */
-			color: #04a346
-         }
-         .lds-heart,
-         .lds-heart div,
-         .lds-heart div:after,
-         .lds-heart div:before {
+<head>
+	<style>
+		*{
 			box-sizing: border-box;
-         }
-         .lds-heart {
+			padding: 0;
+			margin: 0;
+			font-family: 'poppins', sans-serif;
+			font-size: 18px;
+		}
+		body{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.container{
+			width: calc(var(--vh, 1vh) * 100);
+			padding: 30px;
+			margin: 4px;
+			border: 1px solid #eeeeee;
+			border-radius: 10px;
+			background-color: #04a346;
+		}
+		h4{
+			margin-bottom: 10px;
+			font-size: 24px;
+			color: white;
+		}
+		input{
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 10px;
+			border-radius: 5px;
+		}
+		select{
+			width: 25%;
+			padding: 10px;
+			margin-bottom: 10px;
+			border-radius: 5px;
+		}
+		textarea{
+			width: 100%;
+			padding: 10px;
+			border-radius: 5px;
+		}
+		#submit{
+			border: none;
+			background-color: rgb(12, 80, 4);
+			color: white;
+			width: 25%;
+			margin-top: 10px;
+			border-radius: 5px;
+		}
+		#submit:hover{
+			background-color: #0b3b06;
+		}
+		#message{
+			color: white;
+		}
+
+		/* start spinning animation */
+		.lds-dual-ring {
+			/* change color here */
+			color: white
+		}
+		.lds-dual-ring,
+		.lds-dual-ring:after {
+			box-sizing: border-box;
+		}
+		.lds-dual-ring {
 			display: inline-block;
-			position: relative;
-			width: 80px;
-			height: 80px;
-			transform: rotate(45deg);
-			transform-origin: 40px 40px;
-         }
-         .lds-heart div {
-			top: 28px;
-			left: 28px;
-			position: absolute;
-			width: 32px;
-			height: 32px;
-			background: currentColor;
-			animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
-         }
-         .lds-heart div:after,
-         .lds-heart div:before {
+			width: 50px;
+			height: 50px;
+		}
+		.lds-dual-ring:after {
 			content: " ";
-			position: absolute;
 			display: block;
-			width: 32px;
-			height: 32px;
-			background: currentColor;
-         }
-         .lds-heart div:before {
-			left: -24px;
-			border-radius: 50% 0 0 50%;
-         }
-         .lds-heart div:after {
-			top: -24px;
-			border-radius: 50% 50% 0 0;
-			}
-			@keyframes lds-heart {
+			width: 34px;
+			height: 34px;
+			margin: 8px;
+			border-radius: 50%;
+			border: 6.4px solid currentColor;
+			border-color: currentColor transparent currentColor transparent;
+			animation: lds-dual-ring 1.2s linear infinite;
+		}
+		@keyframes lds-dual-ring {
 			0% {
-			transform: scale(0.95);
-			}
-			5% {
-			transform: scale(1.1);
-			}
-			39% {
-			transform: scale(0.85);
-			}
-			45% {
-			transform: scale(1);
-			}
-			60% {
-			transform: scale(0.95);
+				transform: rotate(0deg);
 			}
 			100% {
-			transform: scale(0.9);
+				transform: rotate(360deg);
 			}
-         }
-         /* end spinning animation */
-      </style>
-   </head>
-   <body>
-      <div class="container">
-         <form method="post" action="" name="contact-form">
-			<div class="row">
-               <div>
-                  <h1 style="color: #04a346">Tiệm Giặt Sấy Ori</h1>
-               </div>
-               <div class="col-25">
-               </div>
-            </div>
-            <div class="row">
-               <div>
-                  <input type="text" name="Tên" placeholder="Tên nhân viên">
-               </div>
-            </div>
-            <div class="row">
-               <div>
-                  <select name="Vào/Tan Ca">
-                     <option value="Vào Ca">Vào Ca</option>
-                     <option value="Tan Ca">Tan Ca</option>
-                  </select>
-               </div>
-            </div>
-            <div class="row">
-               <div>
-                  <textarea name="Ghi chú của nhân viên (nếu có)" rows="3" placeholder="Ghi chú của nhân viên (nếu có)" style="height:80px"></textarea>
-               </div>
-            </div>
-            <div class="row">
-               <input id="submitLocation" type="Nơi chấm công" name="Nơi chấm công" placeholder="Nơi chấm công" style="display: none">
-            </div>
-            <div class="row">
-               <div id="message" style="display: none;">
-                  <div>Xác nhận chấm công thành công tại:</div>
-                  <a id="gmapUrl" href=""></a>
-               </div>
-               <input type="submit" value="Gửi" id="submit">
-               <div id="spinning" style="display: none;" class="lds-heart">
-                  <div></div>
-               </div>
-            </div>
-         </form>
-      </div>
-      <script>
-         const MAX_DISTANCE = 150; // meters
-         const shopLocations = [
-         	{
-         		lat: 10.0416514, // shop 1 To Hien Thanh
-         		lng: 105.7553143
-         	},
-         	{
-         		lat: 10.0487630, // shop 2 Nguyen De
-         		lng: 105.7634580
-         	}
-         ]
-         const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec'
-         
-         const submitLocation = document.getElementById("submitLocation");
-         const submitBtn = document.getElementById("submit");
-         const form = document.forms['contact-form'];
-         
-         form.addEventListener('submit', e => {
-         	e.preventDefault();
-         
-         	submitBtn.style.display = "none";
-         	document.getElementById("spinning").style.display = "block";
-         
-         	getLocation()
-         })
-         
-         function getLocation() {
-         	if (navigator.geolocation) {
-         		try {
-         			navigator.geolocation.getCurrentPosition(fillPositionAndSubmit);
-         		}
-         		catch(err) {
-         			// not sure this work
-         			alert("Không thể truy cập vị trí. Vui lòng cho phép truy cập.");
-         		}
-         	} else {
-         		// not sure this work
-         		alert("Thiết bị không hỗ trợ vị trí, vui lòng thử lại với trình duyệt khác (Safari, Chrome hoặc Firefox)");
-         	}
-         }
-         
-         function fillPositionAndSubmit(position) {
-         	var curLat = position.coords.latitude;
-         	var curLng = position.coords.longitude;
-         	
-         	var googleMapUrl = 'https://maps.google.com/?q='+curLat+','+curLng+'';
-         	submitLocation.value = googleMapUrl;
-         
-         	var formData = new FormData(form);
-         	if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
-         		alert("Vui lòng điền Tên nhân viên");
-         		window.location.reload();
-         		throw new Error('Vui lòng điền Tên nhân viên');
-         	} else {
-         		// Verify device location
-         		var hasValidLocation = false;
-         		for (let i = 0; i < shopLocations.length; i++) {
-         			var shopLocation = shopLocations[i];
-         			var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters
-         			if (distance < MAX_DISTANCE) {
-         				hasValidLocation = true;
-         			}
-         		}
-         		if (!hasValidLocation) {
-         			alert("Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.");
-         			window.location.reload();
-         			throw new Error('Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.');
-         		}
-         
-         		// Submit
-         		fetch(scriptURL, { method: 'POST', body: formData})
-         			.then(response => {
-         				if (response.status == "200") {
-         					alert("Xác nhận chấm công thành công");
-         					var gUrlEl = document.getElementById("gmapUrl");
-         					gUrlEl.innerHTML = googleMapUrl;
-         					gUrlEl.href = googleMapUrl;
-         					document.getElementById("message").style.display = "block";
-         					submitBtn.style.display = "none";
-         					document.getElementById("spinning").style.display = "none";
-         				} else {
-         					alert("Chấm công thất bại")
-         					window.location.reload();
-         				}
-         			})
-         			.catch(error => console.error('Error!', error.message))
-         	}
-         }
-         
-         function calculateDistance(lat1, lon1, lat2, lon2) {
-         	const earthRadius = 6371; // Radius of the Earth in kilometers
-         
-         	// Convert latitude and longitude from degrees to radians
-         	const lat1Rad = degreesToRadians(lat1);
-         	const lon1Rad = degreesToRadians(lon1);
-         	const lat2Rad = degreesToRadians(lat2);
-         	const lon2Rad = degreesToRadians(lon2);
-         
-         	// Calculate the differences between the latitudes and longitudes
-         	const latDiff = lat2Rad - lat1Rad;
-         	const lonDiff = lon2Rad - lon1Rad;
-         
-         	// Use the Haversine formula to calculate the distance
-         	const a =
-         		Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-         		Math.cos(lat1Rad) *
-         		Math.cos(lat2Rad) *
-         		Math.sin(lonDiff / 2) *
-         		Math.sin(lonDiff / 2);
-         	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-         
-         	// Calculate the distance in meters
-         	const distance = earthRadius * c * 1000;
-         
-         	return distance;
-         }
-         
-         // Helper function to convert degrees to radians
-         function degreesToRadians(degrees) {
-         	return (degrees * Math.PI) / 180;
-         }
-         
-      </script>
-   </body>
+		}
+		/* end spinning animation */
+	</style>
+</head>
+<body>
+	<div class="container">
+		<form method="post" action="" name="contact-form">
+			<h4>Giặt Sấy Ori</h4>
+			<input type="text" name="Tên" placeholder="Tên nhân viên">
+			<select name="Vào/Tan Ca" style="height: 50px">
+				<option value="Vào Ca">Vào Ca</option>
+				<option value="Tan Ca">Tan Ca</option>
+			</select>
+
+			<textarea name="Ghi chú của nhân viên (nếu có)" rows="7" placeholder="Ghi chú của nhân viên (nếu có)"></textarea>
+			<input id="submitLocation" type="Nơi chấm công" name="Nơi chấm công" placeholder="Nơi chấm công" style="display: none">
+			<div id="message" style="display: none;">
+				<div>Xác nhận chấm công thành công tại:</div>
+				<a id="gmapUrl" href="" style="color: white"></a>
+			</div>
+			<input type="submit" value="Gửi" id="submit">
+			<div id="spinning" class="lds-dual-ring" style="display: none;"></div>
+		</form>
+	</div>
+
+	<script>
+		const MAX_DISTANCE = 150; // meters
+		const shopLocations = [
+			{
+				lat: 10.0416514, // shop 1 To Hien Thanh
+				lng: 105.7553143
+			},
+			{
+				lat: 10.0487630, // shop 2 Nguyen De
+				lng: 105.7634580
+			}
+		]
+		const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec'
+
+		const submitLocation = document.getElementById("submitLocation");
+		const submitBtn = document.getElementById("submit");
+		const form = document.forms['contact-form'];
+
+		form.addEventListener('submit', e => {
+			e.preventDefault();
+
+			submitBtn.style.display = "none";
+			document.getElementById("spinning").style.display = "block";
+
+			getLocation()
+		})
+
+		function getLocation() {
+			if (navigator.geolocation) {
+				try {
+					navigator.geolocation.getCurrentPosition(fillPositionAndSubmit);
+				}
+				catch(err) {
+					// not sure this work
+					alert("Không thể truy cập vị trí. Vui lòng cho phép truy cập.");
+				}
+			} else {
+				// not sure this work
+				alert("Thiết bị không hỗ trợ vị trí, vui lòng thử lại với trình duyệt khác (Safari, Chrome hoặc Firefox)");
+			}
+		}
+
+		function fillPositionAndSubmit(position) {
+			var curLat = position.coords.latitude;
+			var curLng = position.coords.longitude;
+			
+			var googleMapUrl = 'https://maps.google.com/?q='+curLat+','+curLng+'';
+			submitLocation.value = googleMapUrl;
+
+			var formData = new FormData(form);
+			if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
+				alert("Vui lòng điền Tên nhân viên");
+				window.location.reload();
+				throw new Error('Vui lòng điền Tên nhân viên');
+			} else {
+				// Verify device location
+				var hasValidLocation = false;
+				for (let i = 0; i < shopLocations.length; i++) {
+					var shopLocation = shopLocations[i];
+					var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters
+					if (distance < MAX_DISTANCE) {
+						hasValidLocation = true;
+					}
+				}
+				if (!hasValidLocation) {
+					alert("Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.");
+					window.location.reload();
+					throw new Error('Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.');
+				}
+
+				// Submit
+				fetch(scriptURL, { method: 'POST', body: formData})
+					.then(response => {
+						if (response.status == "200") {
+							alert("Xác nhận chấm công thành công");
+							var gUrlEl = document.getElementById("gmapUrl");
+							gUrlEl.innerHTML = googleMapUrl;
+							gUrlEl.href = googleMapUrl;
+							document.getElementById("message").style.display = "block";
+							submitBtn.style.display = "none";
+							document.getElementById("spinning").style.display = "none";
+						} else {
+							alert("Chấm công thất bại")
+							window.location.reload();
+						}
+					})
+					.catch(error => console.error('Error!', error.message))
+			}
+		}
+
+		function calculateDistance(lat1, lon1, lat2, lon2) {
+			const earthRadius = 6371; // Radius of the Earth in kilometers
+
+			// Convert latitude and longitude from degrees to radians
+			const lat1Rad = degreesToRadians(lat1);
+			const lon1Rad = degreesToRadians(lon1);
+			const lat2Rad = degreesToRadians(lat2);
+			const lon2Rad = degreesToRadians(lon2);
+
+			// Calculate the differences between the latitudes and longitudes
+			const latDiff = lat2Rad - lat1Rad;
+			const lonDiff = lon2Rad - lon1Rad;
+
+			// Use the Haversine formula to calculate the distance
+			const a =
+				Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+				Math.cos(lat1Rad) *
+				Math.cos(lat2Rad) *
+				Math.sin(lonDiff / 2) *
+				Math.sin(lonDiff / 2);
+			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+			// Calculate the distance in meters
+			const distance = earthRadius * c * 1000;
+
+			return distance;
+		}
+
+		// Helper function to convert degrees to radians
+		function degreesToRadians(degrees) {
+			return (degrees * Math.PI) / 180;
+		}
+
+	</script>
+</body>
 </html>
