@@ -109,7 +109,7 @@
 			<textarea name="Ghi chú của nhân viên (nếu có)" rows="4" placeholder="Ghi chú của nhân viên (nếu có)"></textarea>
 			<input id="submitLocation" type="Nơi chấm công" name="Nơi chấm công" placeholder="Nơi chấm công" style="display: none">
 			<div id="message" style="display: none;">
-				<div id="successMsg">Xác nhận [status] thành công lúc [time] tại vị trí:</div>
+				<div id="successMsg">Xác nhận [status] thành công lúc [time] tại [shopName], định vị:</div>
 				<a id="gmapUrl" href="" style="color: white"></a>
 			</div>
 			<input type="submit" value="Gửi" id="submit">
@@ -221,6 +221,7 @@
 						let msg = document.getElementById("successMsg").innerHTML;
 						msg = msg.replace("[status]", formData.get('Vào/Tan Ca'));
 						msg = msg.replace("[time]", getFormattedNow());
+						msg = msg.replace("[shopName]", shopCode2Name[shopCode]);
 						document.getElementById("successMsg").innerHTML = msg;
 
 						var gUrlEl = document.getElementById("gmapUrl");
