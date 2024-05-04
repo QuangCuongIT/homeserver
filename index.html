@@ -100,7 +100,7 @@
 	<div class="container">
 		<form method="post" action="" name="contact-form">
 			<h4>Tiệm Giặt Sấy Ori</h4>
-			<input type="text" name="Tên" placeholder="Tên nhân viên">
+			<input id="name" type="text" name="Tên" placeholder="Tên nhân viên">
 			<select name="Vào/Tan Ca" style="height: 50px">
 				<option value="Vào Ca">Vào Ca</option>
 				<option value="Tan Ca">Tan Ca</option>
@@ -129,11 +129,24 @@
 				lng: 105.7634580
 			}
 		]
+		const shopCode2Name = {
+			"6PDC2J" : "Tiệm 1",
+			"UZ3JLR" : "Tiệm 2"
+		};
+
 		const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec'
 
 		const submitLocation = document.getElementById("submitLocation");
 		const submitBtn = document.getElementById("submit");
 		const form = document.forms['contact-form'];
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const shopCode = urlParams.get('code');
+
+		var previousName = localStorage.getItem("name");
+		if (previousName !== undefined && previousName !== null && previousName.trim() !== "") {
+			document.getElementById("name").value = previousName;
+		}
 
 		form.addEventListener('submit', e => {
 			e.preventDefault();
@@ -167,50 +180,61 @@
 			submitLocation.value = googleMapUrl;
 
 			var formData = new FormData(form);
+
+			if (shopCode === null || shopCode === undefined || shopCode.trim() === "" 
+					|| shopCode2Name[shopCode] === null || shopCode2Name[shopCode] === undefined) {
+				alert("QR sai, thiếu mã chi nhánh");
+				window.location.reload();
+				throw new Error('QR sai, thiếu mã chi nhánh');
+			}
+			formData.set('Chi nhánh', shopCode2Name[shopCode]);
+
 			if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
 				alert("Vui lòng điền Tên nhân viên");
 				window.location.reload();
 				throw new Error('Vui lòng điền Tên nhân viên');
-			} else {
-				// Verify device location
-				var hasValidLocation = false;
-				for (let i = 0; i < shopLocations.length; i++) {
-					var shopLocation = shopLocations[i];
-					var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters
-					if (distance < MAX_DISTANCE) {
-						hasValidLocation = true;
-					}
-				}
-				if (!hasValidLocation) {
-					alert("Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.");
-					window.location.reload();
-					throw new Error('Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.');
-				}
-
-				// Submit
-				fetch(scriptURL, { method: 'POST', body: formData})
-					.then(response => {
-						if (response.status == "200") {
-							alert("Xác nhận chấm công thành công");
-
-							let msg = document.getElementById("successMsg").innerHTML;
-							msg = msg.replace("[status]", formData.get('Vào/Tan Ca'));
-							msg = msg.replace("[time]", getFormattedNow());
-							document.getElementById("successMsg").innerHTML = msg;
-
-							var gUrlEl = document.getElementById("gmapUrl");
-							gUrlEl.innerHTML = googleMapUrl;
-							gUrlEl.href = googleMapUrl;
-							document.getElementById("message").style.display = "block";
-							submitBtn.style.display = "none";
-							document.getElementById("spinning").style.display = "none";
-						} else {
-							alert("Chấm công thất bại")
-							window.location.reload();
-						}
-					})
-					.catch(error => console.error('Error!', error.message))
 			}
+
+			// Verify device location
+			var hasValidLocation = false;
+			for (let i = 0; i < shopLocations.length; i++) {
+				var shopLocation = shopLocations[i];
+				var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters
+				if (distance < MAX_DISTANCE) {
+					hasValidLocation = true;
+				}
+			}
+			if (!hasValidLocation) {
+				alert("Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.");
+				window.location.reload();
+				throw new Error('Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.');
+			}
+
+			// Submit
+			fetch(scriptURL, { method: 'POST', body: formData})
+				.then(response => {
+					if (response.status == "200") {
+						alert("Xác nhận chấm công thành công");
+
+						localStorage.setItem("name", formData.get('Tên'));
+
+						let msg = document.getElementById("successMsg").innerHTML;
+						msg = msg.replace("[status]", formData.get('Vào/Tan Ca'));
+						msg = msg.replace("[time]", getFormattedNow());
+						document.getElementById("successMsg").innerHTML = msg;
+
+						var gUrlEl = document.getElementById("gmapUrl");
+						gUrlEl.innerHTML = googleMapUrl;
+						gUrlEl.href = googleMapUrl;
+						document.getElementById("message").style.display = "block";
+						submitBtn.style.display = "none";
+						document.getElementById("spinning").style.display = "none";
+					} else {
+						alert("Chấm công thất bại")
+						window.location.reload();
+					}
+				})
+				.catch(error => console.error('Error!', error.message))
 		}
 
 		function getFormattedNow() {
