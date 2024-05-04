@@ -109,7 +109,7 @@
 			<textarea name="Ghi chú của nhân viên (nếu có)" rows="4" placeholder="Ghi chú của nhân viên (nếu có)"></textarea>
 			<input id="submitLocation" type="Nơi chấm công" name="Nơi chấm công" placeholder="Nơi chấm công" style="display: none">
 			<div id="message" style="display: none;">
-				<div id="successMsg">Xác nhận [status] thành công lúc [time] tại [shopName], định vị:</div>
+				<div id="successMsg">Xác nhận [status] lúc [time] tại [shopName], định vị:</div>
 				<a id="gmapUrl" href="" style="color: white"></a>
 			</div>
 			<input type="submit" value="Gửi" id="submit">
@@ -190,9 +190,9 @@
 			formData.set('Chi nhánh', shopCode2Name[shopCode]);
 
 			if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
-				alert("Vui lòng điền Tên nhân viên");
+				alert("Không được bỏ trống tên");
 				window.location.reload();
-				throw new Error('Vui lòng điền Tên nhân viên');
+				throw new Error('Không được bỏ trống tên');
 			}
 
 			// Verify device location
@@ -205,9 +205,9 @@
 				}
 			}
 			if (!hasValidLocation) {
-				alert("Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.");
+				alert("Lỗi! Không thể chấm công từ xa. Nhân viên chỉ có thể chấm công khi đang ở tiệm");
 				window.location.reload();
-				throw new Error('Lỗi! Không thể chấm công từ xa. Vui lòng di chuyển tới tiệm.');
+				throw new Error('Lỗi! Không thể chấm công từ xa. Nhân viên chỉ có thể chấm công khi đang ở tiệm');
 			}
 
 			// Submit
