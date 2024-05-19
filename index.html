@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval';">
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
@@ -64,6 +63,14 @@
 			color: white;
 		}
 
+		@viewport {
+			width: device-width;
+			zoom: 6;
+			min-zoom: 0.5;
+			max-zoom: 3;
+			user-zoom: fixed;
+		}
+
 		/* start spinning animation */
 		.lds-dual-ring {
 			/* change color here */
@@ -121,7 +128,7 @@
 			</div>
 			<input type="submit" value="Gửi" id="submit">
 			<div id="spinning" class="lds-dual-ring" style="display: none;"></div>
-			<div><span style="float: right; font-size: 55%; color: white">Phiên bản: 2.0.4</span></div>
+			<div><span style="float: right; font-size: 55%; color: white">Phiên bản: 2.0.1</span></div>
 		</form>
 	</div>
 
@@ -143,8 +150,11 @@
 				}
 			}
 		}
-		const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec';
-		const printerURL = 'http://192.168.1.43/';
+		// const scriptURL = 'https://script.google.com/macros/s/AKfycbwRQ_DwN5xaak--miZkQp-JCwiC2aQP8EHb93nxuwoaaAptkeoE57TlqDPHkYigLyUf/exec';
+
+		// test
+		const scriptURL = 'https://script.google.com/macros/s/AKfycbw3nO_zuAoqzmKLvLJwG4_IgSkWzhymh-oxzm6_yumQQlox0M2exAfAymYGfGH30B1S1w/exec'
+		// test
 
 		const submitLocation = document.getElementById("submitLocation");
 		const submitBtn = document.getElementById("submit");
@@ -187,70 +197,66 @@
 		}
 
 		function fillPositionAndSubmit(position) {
-			fetch(printerURL, { mode: 'no-cors' })
+			if (shopCode === null || shopCode === undefined || shopCode.trim() === "" 
+					|| shopCode2Data[shopCode] === null || shopCode2Data[shopCode] === undefined) {
+				alert("QR sai, thiếu mã chi nhánh");
+				window.location.reload();
+				return;
+			}
+
+			var curLat = position.coords.latitude;
+			var curLng = position.coords.longitude;
+			var googleMapUrl = 'https://maps.google.com/?q='+curLat+','+curLng+'';
+			submitLocation.value = googleMapUrl;
+
+			// Verify device location					
+			var shopLocation = shopCode2Data[shopCode].location;
+			var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters\
+
+			// test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111 xxxxxxxxxxxxxxxxxxx
+			// if (distance > MAX_DISTANCE) {
+			// 	alert("Lỗi! Không thể chấm công từ xa. Nhân viên chỉ có thể chấm công khi đang ở " 
+			// 			+ shopCode2Data[shopCode].name);
+			// 	window.location.reload();
+			// 	return;
+			// }
+			// test!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+			var formData = new FormData(form);
+			formData.set('Chi nhánh', shopCode2Data[shopCode].name);
+			if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
+				alert("Không được bỏ trống tên");
+				window.location.reload();
+				return;
+			}
+
+			// Submit
+			fetch(scriptURL, { method: 'POST', body: formData})
 				.then(response => {
-					var formData = new FormData(form);
-					if (shopCode === null || shopCode === undefined || shopCode.trim() === "" 
-							|| shopCode2Data[shopCode] === null || shopCode2Data[shopCode] === undefined) {
-						alert("QR sai, thiếu mã chi nhánh");
+					if (response.status == "200") {
+						alert("Xác nhận chấm công thành công");
+
+						localStorage.setItem("name", formData.get('Tên'));
+
+						let msg = document.getElementById("successMsg").innerHTML;
+						msg = msg.replace("[status]", formData.get('Vào/Tan Ca'));
+						msg = msg.replace("[time]", getFormattedNow());
+						msg = msg.replace("[shopName]", shopCode2Data[shopCode].name);
+						document.getElementById("successMsg").innerHTML = msg;
+
+						var gUrlEl = document.getElementById("gmapUrl");
+						gUrlEl.innerHTML = googleMapUrl;
+						gUrlEl.href = googleMapUrl;
+						document.getElementById("message").style.display = "block";
+						submitBtn.style.display = "none";
+						document.getElementById("spinning").style.display = "none";
+					} else {
+						alert("Chấm công thất bại")
 						window.location.reload();
 						return;
 					}
-					formData.set('Chi nhánh', shopCode2Data[shopCode].name);
-					if (formData.get('Tên') === undefined || formData.get('Tên') === null || formData.get('Tên').trim() === "") {
-						alert("Không được bỏ trống tên");
-						window.location.reload();
-						return;
-					}
-
-					var curLat = position.coords.latitude;
-					var curLng = position.coords.longitude;
-					var googleMapUrl = 'https://maps.google.com/?q='+curLat+','+curLng+'';
-					submitLocation.value = googleMapUrl;
-
-					// Verify device location					
-					var shopLocation = shopCode2Data[shopCode].location;
-					var distance = calculateDistance(curLat, curLng, shopLocation.lat, shopLocation.lng); // meters
-					if (distance > MAX_DISTANCE) {
-						alert("Lỗi! Không thể chấm công từ xa. Nhân viên chỉ có thể chấm công khi đang ở " 
-								+ shopCode2Data[shopCode].name);
-						window.location.reload();
-						return;
-					}
-
-					// Submit
-					fetch(scriptURL, { method: 'POST', body: formData})
-						.then(response => {
-							if (response.status == "200") {
-								alert("Xác nhận chấm công thành công");
-
-								localStorage.setItem("name", formData.get('Tên'));
-
-								let msg = document.getElementById("successMsg").innerHTML;
-								msg = msg.replace("[status]", formData.get('Vào/Tan Ca'));
-								msg = msg.replace("[time]", getFormattedNow());
-								msg = msg.replace("[shopName]", shopCode2Data[shopCode].name);
-								document.getElementById("successMsg").innerHTML = msg;
-
-								var gUrlEl = document.getElementById("gmapUrl");
-								gUrlEl.innerHTML = googleMapUrl;
-								gUrlEl.href = googleMapUrl;
-								document.getElementById("message").style.display = "block";
-								submitBtn.style.display = "none";
-								document.getElementById("spinning").style.display = "none";
-							} else {
-								alert("Chấm công thất bại")
-								window.location.reload();
-								return;
-							}
-						})
-						.catch(error => console.error('Error!', error.message))
 				})
-				.catch(error => {
-					alert("Lỗi! Không thể xác định wifi của tiệm. Kết nối điện thoại với wifi của tiệm để chấm công.");
-					window.location.reload();
-					return;
-				});
+				.catch(error => console.error('Error!', error.message))
 		}
 
 		function getFormattedNow() {
